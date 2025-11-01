@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producer-Consumer Process</title>
+    <style>
+        /* ===== "ABOUT US" BUTTON STYLING ===== */
+        #about-us-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            padding: 8px 12px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: white;
+            background-color: #333;
+            border: 1px solid #555;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #about-us-button:hover {
+            background-color: #555;
+        }
+
+        /* ===== GENERAL STYLING ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* ===== PROCESS STEPS CONTAINER ===== */
+        .steps-container {
+            margin-bottom: 30px;
+        }
+
+        /* ===== INDIVIDUAL STEP STYLING ===== */
+        .step {
+            padding: 20px;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+            background: #fafafa;
+        }
+
+        /* Active step styling */
+        .step.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 0.95rem;
+        }
+
+        /* ===== CONTROLS (BUTTONS) ===== */
+        .controls {
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 25px;
+            margin: 0 5px;
+            font-size: 1rem;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* ===== STEP INDICATOR ===== */
+        .step-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="about.html" id="about-us-button">About Us</a>
+
+    <div class="container">
+        <h1>Producer-Consumer Process</h1>
+
+        <div class="step-indicator">
+            Step <span id="currentStep">1</span> of <span id="totalSteps">6</span>
+        </div>
+
+        <div class="steps-container">
+            <div class="step active" data-step="1">
+                <div class="step-title">Step 1: Producer Starts</div>
+                <div class="step-description">
+                    The producer thread begins execution and prepares to create a new item.
+                </div>
+            </div>
+
+            <div class="step" data-step="2">
+                <div class="step-title">Step 2: Item Produced</div>
+                <div class="step-description">
+                    The producer creates a new item and prepares to add it to the buffer.
+                </div>
+            </div>
+
+            <div class="step" data-step="3">
+                <div class="step-title">Step 3: Check Buffer Space</div>
+                <div class="step-description">
+                    The producer checks if there is space in the buffer. If full, it waits.
+                </div>
+            </div>
+
+            <div class="step" data-step="4">
+                <div class="step-title">Step 4: Item Added to Buffer</div>
+                <div class="step-description">
+                    The item is placed into the shared buffer.
+                </div>
+            </div>
+
+            <div class="step" data-step="5">
+                <div class="step-title">Step 5: Consumer Retrieves Item</div>
+                <div class="step-description">
+                    The consumer checks the buffer, finds an item, and removes it.
+                </div>
+            </div>
+
+            <div class="step" data-step="6">
+                <div class="step-title">Step 6: Item Consumed</div>
+                <div class="step-description">
+                    The consumer processes the item. The cycle can now repeat.
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== JAVASCRIPT LOGIC FOR STEP NAVIGATION =====
+
+        const steps = document.querySelectorAll('.step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentStepDisplay = document.getElementById('currentStep');
+        const totalStepsDisplay = document.getElementById('totalSteps');
+
+        let currentStep = 0;
+        const totalSteps = steps.length;
+
+        totalStepsDisplay.textContent = totalSteps;
+
+        function updateStep() {
+            steps.forEach(step => step.classList.remove('active'));
+            steps[currentStep].classList.add('active');
+            currentStepDisplay.textContent = currentStep + 1;
+            updateButtons();
+        }
+
+        function updateButtons() {
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps - 1;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                updateStep();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateStep();
+            }
+        });
+
+        // Initialize button states
+        updateButtons();
+    </script>
+</body>
+</html>
